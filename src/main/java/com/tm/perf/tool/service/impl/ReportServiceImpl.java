@@ -21,6 +21,6 @@ public class ReportServiceImpl implements ReportService {
 	}
 	
 	public UserResponse listofUsers(int id) {
-		return null;
+		return reportDao.listofUsers(id);
 	}
 }
