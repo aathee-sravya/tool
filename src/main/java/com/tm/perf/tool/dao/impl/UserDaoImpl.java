@@ -13,7 +13,9 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import com.tm.perf.tool.api.request.LoginRequest;
+import com.tm.perf.tool.api.request.UserInfoRequest;
 import com.tm.perf.tool.api.response.LoginResponse;
+import com.tm.perf.tool.api.response.UserInfoResponse;
 import com.tm.perf.tool.common.Constants.ErrorCodes;
 import com.tm.perf.tool.common.Constants.HTTPResponse;
 import com.tm.perf.tool.dao.UserDao;
@@ -61,6 +63,39 @@ public class UserDaoImpl implements UserDao{
         } catch (Exception e) {
             LOGGER.error("Exception occured during loginUser()", e);
             response = new  LoginResponse(HTTPResponse.FAILED);
+            response.setErrorCode(ErrorCodes.technical_error);
+            return response;
+        }
+    }
+
+    @Override
+    public UserInfoResponse getUserInfo(UserInfoRequest createUserReq) {
+        UserInfoResponse response = null;
+        try {
+            String procName = "p_get_user_info_v1dot0";
+            LOGGER.info("loginUser ::  Calling  procedure   " + procName);
+
+            MapSqlParameterSource inParams = new MapSqlParameterSource();
+            inParams.addValue("in_unique_id", createUserReq.getUniqueId());
+
+            SimpleJdbcCall proc = new SimpleJdbcCall(jdbcTemplate).withProcedureName(procName);
+            //proc.returningResultSet("userInfo", new UserInfoResponse);
+            Map<String, Object> outMap = proc.execute(inParams);
+            LOGGER.info("outMap is ::  Calling  procedure   " + outMap);
+
+            if (outMap != null && "Y".equals(outMap.get("out_status"))) {
+                response = new  UserInfoResponse(HTTPResponse.SUCCESS);
+                return response;
+            } else {
+                response = new  UserInfoResponse(HTTPResponse.FAILED);
+                response.setErrorCode(ErrorCodes.technical_error);
+                return response;
+            }
+           
+
+        } catch (Exception e) {
+            LOGGER.error("Exception occured during loginUser()", e);
+            response = new  UserInfoResponse(HTTPResponse.FAILED);
             response.setErrorCode(ErrorCodes.technical_error);
             return response;
         }

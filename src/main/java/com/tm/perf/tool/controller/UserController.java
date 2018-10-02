@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tm.perf.tool.api.request.LoginRequest;
+import com.tm.perf.tool.api.request.UserInfoRequest;
 import com.tm.perf.tool.api.response.LoginResponse;
+import com.tm.perf.tool.api.response.UserInfoResponse;
 import com.tm.perf.tool.service.UserService;
 
 @RestController
@@ -40,13 +42,13 @@ public class UserController {
         return response;
     }
     
-//    @RequestMapping(value = {"/getUserInfo"}, method = {org.springframework.web.bind.annotation.RequestMethod.GET})
-//    public @ResponseBody CreateUserResponse getUserInfo(@RequestParam CreateUserRequest createUserReq) {
-//        LOGGER.info("UserController.createUser() - request:" + createUserReq);
-//        CreateUserResponse response = walletService.createUser(createUserReq);
-//        LOGGER.info("UserController.createUser() - response:" + response);
-//        return response;
-//    }
+    @RequestMapping(value = {"/getUserInfo"}, method = {org.springframework.web.bind.annotation.RequestMethod.GET})
+    public @ResponseBody UserInfoResponse getUserInfo(@RequestBody UserInfoRequest createUserReq) {
+        LOGGER.info("UserController.getUserInfo() - request:" + createUserReq);
+        UserInfoResponse response = userService.getUserInfo(createUserReq);
+        LOGGER.info("UserController.getUserInfo() - response:" + response);
+        return response;
+    }
 //    
 //    @RequestMapping(value = {"/getUserRoles"}, method = {org.springframework.web.bind.annotation.RequestMethod.GET})
 //    public @ResponseBody CreateUserResponse getUserRoles(@RequestParam CreateUserRequest createUserReq) {

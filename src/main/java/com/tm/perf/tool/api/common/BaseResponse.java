@@ -9,6 +9,10 @@ public class BaseResponse {
     private ErrorCodes errorCode;
     private HTTPResponse status;
     
+    public BaseResponse() {
+        super();
+    }
+
     public BaseResponse(HTTPResponse status) {
         super();
         this.status = status;

@@ -1,7 +1,9 @@
 package com.tm.perf.tool.service;
 
 import com.tm.perf.tool.api.request.LoginRequest;
+import com.tm.perf.tool.api.request.UserInfoRequest;
 import com.tm.perf.tool.api.response.LoginResponse;
+import com.tm.perf.tool.api.response.UserInfoResponse;
 
 /* 
  * User Related operations go through this 
@@ -12,4 +14,6 @@ import com.tm.perf.tool.api.response.LoginResponse;
 public interface UserService {
 	
 	public LoginResponse loginUser(LoginRequest loginRequest);
+	
+	public UserInfoResponse getUserInfo(UserInfoRequest createUserReq);
 }

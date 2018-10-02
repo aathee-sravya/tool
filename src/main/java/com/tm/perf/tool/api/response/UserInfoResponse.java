@@ -1,7 +1,14 @@
 package com.tm.perf.tool.api.response;
 
-public class UserInfoResponse {
+import com.tm.perf.tool.api.common.BaseResponse;
+import com.tm.perf.tool.common.Constants.HTTPResponse;
+
+public class UserInfoResponse extends BaseResponse{
     
+    public UserInfoResponse(HTTPResponse status) {
+        super(status);
+        // TODO Auto-generated constructor stub
+    }
     private String uniqUserId;
     private String userName;
     private String fName;
