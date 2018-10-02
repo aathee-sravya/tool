@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.tm.perf.tool.api.request.LoginRequest;
-import com.tm.perf.tool.api.response.CreateUserResponse;
+import com.tm.perf.tool.api.response.LoginResponse;
 import com.tm.perf.tool.service.UserService;
 
 @RestController
@@ -33,9 +33,9 @@ public class UserController {
 //    }
     
     @RequestMapping(value = {"/loginUser"}, method = {org.springframework.web.bind.annotation.RequestMethod.POST})
-    public @ResponseBody CreateUserResponse loginUser(@RequestBody LoginRequest loginRequest) {
+    public @ResponseBody LoginResponse loginUser(@RequestBody LoginRequest loginRequest) {
         LOGGER.info("UserController.loginUser() - request:" + loginRequest);
-        CreateUserResponse response = userService.loginUser(loginRequest);
+        LoginResponse response = userService.loginUser(loginRequest);
         LOGGER.info("UserController.loginUser() - response:" + response);
         return response;
     }

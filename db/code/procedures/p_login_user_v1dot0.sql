@@ -11,12 +11,13 @@ CREATE PROCEDURE p_login_user_v1dot0(
     IN in_password    VARCHAR(100),
     IN in_salt VARCHAR(100),
     IN in_do_commit VARCHAR(1),
+    out out_unique_id VARCHAR(100), 
     OUT out_status           VARCHAR(1),
     OUT out_error_code       VARCHAR(100),
     OUT out_error_msg        TEXT
 ) p_login_user_v1dot0:BEGIN
 
-    DECLARE v_count bigint;
+    DECLARE v_unique_id VARCHAR(100);
 
     DECLARE USER_NOT_FOUND CONDITION FOR SQLSTATE '01001';  
 
@@ -48,12 +49,13 @@ CREATE PROCEDURE p_login_user_v1dot0(
     
     SET out_status = 'N';
 
-    SELECT COUNT(1) INTO v_count FROM t_user WHERE f_email = in_user_mail AND f_password = in_password;
+    SELECT f_unique_id INTO v_unique_id FROM t_user WHERE f_email = in_user_mail AND f_password = in_password;
 
-    IF(v_count <> 1) THEN
+    IF(v_unique_id IS NULL) THEN
         SIGNAL USER_NOT_FOUND;
     END IF;
 
+    SET out_unique_id = v_unique_id;
 
     SET out_status = 'Y';
 
