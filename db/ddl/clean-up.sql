@@ -1,3 +1,4 @@
+use perftool;
 DROP TABLE IF EXISTS t_mst_params;
 DROP TABLE IF EXISTS t_company;
 DROP TABLE IF EXISTS t_company_roles;
@@ -11,3 +12,4 @@ DROP TABLE IF EXISTS t_user_role_mapping;
 DROP TABLE IF EXISTS t_perf_review_log;
 DROP TABLE IF EXISTS t_perf_review;
 DROP TABLE IF EXISTS t_perf_comments;
+DROP TABLE IF EXISTS t_company_teams;

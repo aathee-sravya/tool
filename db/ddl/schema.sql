@@ -1,10 +1,10 @@
-Basic assumptions : 
+/*Basic assumptions : 
 
 * user can be only in one corporate at a time
 * review cycle is hardcoded as monthly, aggregated on FY End
+*/
 
-
-CREATE SCHEMA perftool;
+CREATE SCHEMA IF NOT EXISTS perftool;
 
 use perftool;
 
@@ -26,7 +26,7 @@ INSERT INTO t_mst_params(f_param_name,f_param_display_name) values ('user_level_
 
 /** This table contains list of all company's **/
 DROP TABLE IF EXISTS t_company;
-CREATE TABLE t_company {
+CREATE TABLE t_company (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_name VARCHAR(100) NOT NULL,
 	f_legal_name VARCHAR(100) NOT NULL,
@@ -38,13 +38,13 @@ CREATE TABLE t_company {
 	f_state VARCHAR(100),
 	f_zip VARCHAR(10),
 	f_country VARCHAR(100),
-	f_phone INT(15),
+	f_phone VARCHAR(20),
 	f_agent VARCHAR(100),
 	f_create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
-};
+);
 
-INSERT INTO t_company(f_company_name,f_legal_name, f_website, f_business_nature,f_primary_address,f_state,f_zip,f_country, f_phone, f_agent) VALUES ('TECHMOJO','Techmojo Solutions Pvt Limited', 'www.techmojo.in','finance','active','10th floor, Q4, Cyber Towers', 'Telanagana','500073',
-'040-33445333','user');
+INSERT INTO t_company(f_company_name,f_legal_name,f_website,f_business_nature,f_status,f_primary_address,f_secondary_address,f_state,f_zip,f_country,f_phone,f_agent)
+VALUES('techmojo','techmojo','www.techmojo.in','IT','active','cybertowers,Hyderabad','Hyderabad','Telangana','500081','India','04023355612','admin');
 
 
 /* DEFINES MASTER ROLES Eg: user,manager,admin,lead   */
@@ -67,7 +67,7 @@ INSERT INTO t_company_roles(f_role_name,f_company_id) VALUES ('lead',1);
 /** Company level config for teams */
 DROP TABLE IF EXISTS t_comapany_teams;
 CREATE TABLE t_company_teams (
-	f_id  NOT NULL AUTO_INCREMENT UNIQUE,
+	f_id  BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_id BIGINT NOT NULL,
 	f_team_name VARCHAR(100) NOT NULL,
 	f_display_name VARCHAR(150) NOT NULL,
@@ -80,7 +80,7 @@ CREATE TABLE t_company_teams (
 /** Company level config for designations */
 DROP TABLE IF EXISTS t_company_designations;
 CREATE TABLE t_company_designations (
-	f_id  NOT NULL AUTO_INCREMENT UNIQUE,
+	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_id BIGINT NOT NULL,
 	f_designation VARCHAR(100) NOT NULL,
 	f_display_name VARCHAR(150) NOT NULL,
@@ -93,11 +93,11 @@ CREATE TABLE t_company_designations (
 DROP TABLE IF EXISTS t_company_user_mapping;
 CREATE TABLE t_company_user_mapping (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
-	f_company_id BIGINT NOT NULL REFERENCES t_company(f_id),
+	f_company_id BIGINT NOT NULL REFERENCES t_company(f_company_name),
 	f_user_id BIGINT NOT NULL,
 	f_status VARCHAR(50) DEFAULT 'active',
 	f_create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
 /* config table for user team mapping */
@@ -105,9 +105,9 @@ DROP TABLE IF EXISTS t_team_config;
 CREATE TABLE t_team_config (
 	f_id  BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_id BIGINT NOT NULL,
-	f_team_id BIGINT NOT NULL REFERENCES t_mst_teams(f_id),
-	f_user_id BIGINT NOT NULL REFRENCES t_company_user_mapping(f_id),
-	f_reports_to BIGINT NOT NULL REFERENCES t_company_user_mapping(f_id),
+	f_team_id BIGINT NOT NULL REFERENCES t_company_teams(f_team_name),
+	f_user_id BIGINT NOT NULL REFERENCES t_company_user_mapping(f_user_id),
+	f_reports_to BIGINT NOT NULL REFERENCES t_company_user_mapping(f_user_id),
 	f_agent VARCHAR(100),
 	f_create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -119,7 +119,7 @@ CREATE TABLE t_team_config (
 DROP TABLE IF EXISTS t_sub_params_config;
 CREATE TABLE t_sub_params_config (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
-	f_company_id BIGINT NOT NULL REFERENCES t_company(f_id),
+	f_company_id BIGINT NOT NULL REFERENCES t_company(f_company_name),
 	f_param_name VARCHAR(100) NOT NULL REFERENCES t_mst_params(f_param_name),
 	f_sub_param_name VARCHAR(100) NOT NULL,
 	f_sub_param_display_name VARCHAR(150) NOT NULL,
@@ -132,7 +132,7 @@ CREATE TABLE t_sub_params_config (
 DROP TABLE IF EXISTS t_sub_params_desg_config;
 CREATE TABLE t_sub_params_desg_config (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
-	f_company_id BIGINT NOT NULL REFERENCES t_company(f_id),
+	f_company_id BIGINT NOT NULL REFERENCES t_company(f_company_name),
 	f_config_id BIGINT NOT NULL REFERENCES t_sub_params_config(f_id),
 	f_designation VARCHAR(50) REFERENCES t_mst_designations(f_designation),
 	f_points INT NOT NULL DEFAULT 0,
@@ -144,8 +144,8 @@ CREATE TABLE t_sub_params_desg_config (
 DROP TABLE IF EXISTS t_user_role_mapping;
 CREATE TABLE t_user_role_mapping (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
-	f_company_id BIGINT NOT NULL REFERENCES t_company(f_id),
-	f_role_id BIGINT NOT NULL REFERENCES t_mst_roles(f_id),
+	f_company_id BIGINT NOT NULL REFERENCES t_company(f_company_name),
+	f_role_id BIGINT NOT NULL REFERENCES t_company_roles(f_role_name),
 	f_user_id BIGINT NOT NULL REFERENCES t_company_user_mapping(f_id),
 	f_agent VARCHAR(100),
 	f_create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -157,8 +157,8 @@ DROP TABLE IF EXISTS t_perf_review;
 CREATE TABLE t_perf_review (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_id BIGINT NOT NULL,
-	f_user_id  BIGINT NOT NULL REFERENCES t_company_user_mapping(f_id),
-	f_manager_id BIGINT NOT NULL REFERENCES t_company_user_mapping(f_id),
+	f_user_id  BIGINT NOT NULL REFERENCES t_company_user_mapping(f_user_id),
+	f_manager_id BIGINT NOT NULL REFERENCES t_company_user_mapping(f_user_id),
 	f_sub_config_name VARCHAR(100) NOT NULL,
 	f_designation_id BIGINT NOT NULL,
 	f_actual_points INT NOT NULL DEFAULT 0,
@@ -196,7 +196,7 @@ CREATE TABLE t_perf_comments (
 	f_agent VARCHAR(100),
 	f_create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)
+);
 
 
 /** TODO : need to add routes table */
@@ -206,8 +206,8 @@ CREATE TABLE t_perf_comments (
 
 
 
-**************** USER PROFILE TABLES **********************
-
+/**************** USER PROFILE TABLES **********************/
+DROP TABLE IF EXISTS t_user;
 CREATE TABLE t_user (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_unique_id VARCHAR(100),
@@ -220,6 +220,7 @@ CREATE TABLE t_user (
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP	
 );
 
+DROP TABLE IF EXISTS t_user_log;
 CREATE TABLE t_user_log (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_user_id VARCHAR(100),
@@ -232,9 +233,10 @@ CREATE TABLE t_user_log (
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP	
 );
 
+DROP TABLE IF EXISTS t_user_profile;
 CREATE TABLE t_user_profile (
-	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE
-	f_user_id BIGINT NOT NULL REFERENCES t_user(f_id),
+	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
+	f_user_id BIGINT NOT NULL REFERENCES t_user(f_user_name),
 	f_primary_email VARCHAR(100),
 	f_office_email VARCHAR(100),
 	f_primary_mobile VARCHAR(10),
@@ -252,10 +254,11 @@ CREATE TABLE t_user_profile (
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS t_user_profile_list;
 CREATE TABLE t_user_profile_list (
-	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE
+	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_master_id BIGINT NOT NULL REFERENCES t_user_profile(f_id),
-	f_user_id BIGINT NOT NULL REFERENCES t_user(f_id),
+	f_user_id BIGINT NOT NULL REFERENCES t_user(f_user_name),
 	f_primary_email VARCHAR(100),
 	f_office_email VARCHAR(100),
 	f_primary_mobile VARCHAR(10),
