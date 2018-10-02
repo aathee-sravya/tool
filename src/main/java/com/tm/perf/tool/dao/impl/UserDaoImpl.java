@@ -1,5 +1,6 @@
 package com.tm.perf.tool.dao.impl;
 
+import java.util.List;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ import com.tm.perf.tool.api.response.UserInfoResponse;
 import com.tm.perf.tool.common.Constants.ErrorCodes;
 import com.tm.perf.tool.common.Constants.HTTPResponse;
 import com.tm.perf.tool.dao.UserDao;
+import com.tm.perf.tool.dao.mappers.UserInfoMapper;
 
 @Repository
 public class UserDaoImpl implements UserDao{
@@ -79,19 +81,18 @@ public class UserDaoImpl implements UserDao{
             inParams.addValue("in_unique_id", createUserReq.getUniqueId());
 
             SimpleJdbcCall proc = new SimpleJdbcCall(jdbcTemplate).withProcedureName(procName);
-            //proc.returningResultSet("userInfo", new UserInfoResponse);
+            proc.returningResultSet("userInfo", new UserInfoMapper());
             Map<String, Object> outMap = proc.execute(inParams);
             LOGGER.info("outMap is ::  Calling  procedure   " + outMap);
 
             if (outMap != null && "Y".equals(outMap.get("out_status"))) {
-                response = new  UserInfoResponse(HTTPResponse.SUCCESS);
-                return response;
+                List<UserInfoResponse> outMapList = (List<UserInfoResponse>) outMap.get("userInfo");
+                return outMapList.get(0);
             } else {
                 response = new  UserInfoResponse(HTTPResponse.FAILED);
                 response.setErrorCode(ErrorCodes.technical_error);
                 return response;
             }
-           
 
         } catch (Exception e) {
             LOGGER.error("Exception occured during loginUser()", e);
