@@ -1,5 +1,7 @@
 package com.tm.perf.tool.service;
 
+import com.tm.perf.tool.api.request.LoginRequest;
+import com.tm.perf.tool.api.response.CreateUserResponse;
 import com.tm.perf.tool.request.ReviewReport;
 
 /* 
@@ -10,4 +12,6 @@ import com.tm.perf.tool.request.ReviewReport;
  */
 public interface UserService {
 	ReviewReport getReviewReport();
+	
+	public CreateUserResponse loginUser(LoginRequest loginRequest);
 }
