@@ -1,5 +1,7 @@
 package com.tm.perf.tool.service;
 
+import com.tm.perf.tool.request.ReviewReport;
+
 /* 
  * User Related operations go through this 
  * Basic are identified as
@@ -7,5 +9,5 @@ package com.tm.perf.tool.service;
  *   2) Get User Info/Profile
  */
 public interface UserService {
-
+	ReviewReport getReviewReport();
 }
