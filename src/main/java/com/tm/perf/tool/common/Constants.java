@@ -1,6 +1,9 @@
 package com.tm.perf.tool.common;
 
 public class Constants {
+	
+	
+	public static final Integer DB_SUCCESS = 1;
 
 	public static enum HTTPResponse {
 		SUCCESS,FAILED;
