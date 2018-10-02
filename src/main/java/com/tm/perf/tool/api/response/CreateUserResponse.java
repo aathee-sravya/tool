@@ -1,6 +1,15 @@
 package com.tm.perf.tool.api.response;
 
-public class CreateUserResponse {
+import com.tm.perf.tool.api.common.BaseResponse;
+import com.tm.perf.tool.constants.Constants.Status;
+
+public class CreateUserResponse extends BaseResponse{
+    
+    public CreateUserResponse(Status status) {
+        super(status);
+        // TODO Auto-generated constructor stub
+    }
+
     private String userUniqId;
     private String signUpdate;
     

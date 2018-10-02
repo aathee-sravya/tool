@@ -18,6 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import com.tm.perf.tool.api.request.LoginRequest;
 import com.tm.perf.tool.api.response.CreateUserResponse;
+import com.tm.perf.tool.constants.Constants.ErrorCodes;
+import com.tm.perf.tool.constants.Constants.Status;
 import com.tm.perf.tool.dao.UserDao;
 import com.tm.perf.tool.request.ReviewReport;
 
@@ -63,19 +65,37 @@ public class UserDaoImpl implements UserDao{
 
     @Override
     public CreateUserResponse loginUser(LoginRequest loginRequest) {
-        String procName = "p_login_user_v1dot0";
-        LOGGER.info("loginUser ::  Calling  procedure   " + procName);
-        
-        MapSqlParameterSource inParams = new MapSqlParameterSource();
-        inParams.addValue("in_user_name", loginRequest.getEmailId());
-        inParams.addValue("in_company_name", loginRequest.getPassword());
-        inParams.addValue("in_salt", null);
-        inParams.addValue("in_do_commit", "Y");
-        
-        SimpleJdbcCall proc = new SimpleJdbcCall(jdbcTemplate).withProcedureName(procName);
-        Map<String, Object> outMap = proc.execute(inParams);
-        LOGGER.info("outMap is ::  Calling  procedure   " + outMap);
-        return null;
+        CreateUserResponse response = null;
+        try {
+            String procName = "p_login_user_v1dot0";
+            LOGGER.info("loginUser ::  Calling  procedure   " + procName);
+
+            MapSqlParameterSource inParams = new MapSqlParameterSource();
+            inParams.addValue("in_user_mail", loginRequest.getEmailId());
+            inParams.addValue("in_password", loginRequest.getPassword());
+            inParams.addValue("in_salt", null);
+            inParams.addValue("in_do_commit", "Y");
+
+            SimpleJdbcCall proc = new SimpleJdbcCall(jdbcTemplate).withProcedureName(procName);
+            Map<String, Object> outMap = proc.execute(inParams);
+            LOGGER.info("outMap is ::  Calling  procedure   " + outMap);
+
+            if (outMap != null && "Y".equals(outMap.get("out_status"))) {
+                response = new  CreateUserResponse(Status.success);
+                return response;
+            } else {
+                response = new  CreateUserResponse(Status.failure);
+                response.setErrorCode(ErrorCodes.technical_error);
+                return response;
+            }
+           
+
+        } catch (Exception e) {
+            LOGGER.error("Exception occured during loginUser()", e);
+            response = new  CreateUserResponse(Status.failure);
+            response.setErrorCode(ErrorCodes.technical_error);
+            return response;
+        }
     }
 
 }

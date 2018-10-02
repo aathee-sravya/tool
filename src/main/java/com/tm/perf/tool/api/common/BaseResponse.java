@@ -1,24 +1,29 @@
-package com.tm.perf.tool.api.response;
+package com.tm.perf.tool.api.common;
 
 import com.tm.perf.tool.constants.Constants.ErrorCodes;
 import com.tm.perf.tool.constants.Constants.Status;
 
 public class BaseResponse {
     
-    private ErrorCodes errorMsg;
-    private String errorCode;
+    private String errorMsg;
+    private ErrorCodes errorCode;
     private Status status;
     
-    public ErrorCodes getErrorMsg() {
+    public BaseResponse(Status status) {
+        super();
+        this.status = status;
+    }
+    
+    public String getErrorMsg() {
         return errorMsg;
     }
-    public void setErrorMsg(ErrorCodes errorMsg) {
+    public void setErrorMsg(String errorMsg) {
         this.errorMsg = errorMsg;
     }
-    public String getErrorCode() {
+    public ErrorCodes getErrorCode() {
         return errorCode;
     }
-    public void setErrorCode(String errorCode) {
+    public void setErrorCode(ErrorCodes errorCode) {
         this.errorCode = errorCode;
     }
     public Status getStatus() {

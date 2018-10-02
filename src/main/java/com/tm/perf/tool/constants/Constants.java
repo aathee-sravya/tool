@@ -7,9 +7,11 @@ public class Constants {
     }
     
     public enum ErrorCodes {
-        user_exists,
+        user_already_exists,
         invalid_mobile,
         invalid_email,
-        invalid_password
+        invalid_password,
+        technical_error
+        
     }
 }
