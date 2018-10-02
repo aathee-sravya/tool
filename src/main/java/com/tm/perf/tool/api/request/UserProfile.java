@@ -1,4 +1,4 @@
-package com.tm.perf.tool.request;
+package com.tm.perf.tool.api.request;
 
 import java.sql.Date;
 

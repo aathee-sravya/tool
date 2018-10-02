@@ -17,11 +17,11 @@ import org.springframework.jdbc.core.simple.SimpleJdbcCall;
 import org.springframework.stereotype.Repository;
 
 import com.tm.perf.tool.api.request.LoginRequest;
+import com.tm.perf.tool.api.request.ReviewReport;
 import com.tm.perf.tool.api.response.CreateUserResponse;
 import com.tm.perf.tool.constants.Constants.ErrorCodes;
 import com.tm.perf.tool.constants.Constants.Status;
 import com.tm.perf.tool.dao.UserDao;
-import com.tm.perf.tool.request.ReviewReport;
 
 @Repository
 public class UserDaoImpl implements UserDao{
