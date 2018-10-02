@@ -1,3 +1,4 @@
+use perftool;
 DROP TABLE IF EXISTS t_mst_params;
 DROP TABLE IF EXISTS t_company;
 DROP TABLE IF EXISTS t_company_roles;
