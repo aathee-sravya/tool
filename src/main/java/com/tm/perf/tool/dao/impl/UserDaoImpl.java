@@ -18,8 +18,8 @@ import org.springframework.stereotype.Repository;
 
 import com.tm.perf.tool.api.request.LoginRequest;
 import com.tm.perf.tool.api.response.CreateUserResponse;
-import com.tm.perf.tool.constants.Constants.ErrorCodes;
-import com.tm.perf.tool.constants.Constants.Status;
+import com.tm.perf.tool.common.Constants.ErrorCodes;
+import com.tm.perf.tool.common.Constants.HTTPResponse;
 import com.tm.perf.tool.dao.UserDao;
 import com.tm.perf.tool.request.ReviewReport;
 
@@ -81,10 +81,10 @@ public class UserDaoImpl implements UserDao{
             LOGGER.info("outMap is ::  Calling  procedure   " + outMap);
 
             if (outMap != null && "Y".equals(outMap.get("out_status"))) {
-                response = new  CreateUserResponse(Status.success);
+                response = new  CreateUserResponse(HTTPResponse.SUCCESS);
                 return response;
             } else {
-                response = new  CreateUserResponse(Status.failure);
+                response = new  CreateUserResponse(HTTPResponse.FAILED);
                 response.setErrorCode(ErrorCodes.technical_error);
                 return response;
             }
@@ -92,7 +92,7 @@ public class UserDaoImpl implements UserDao{
 
         } catch (Exception e) {
             LOGGER.error("Exception occured during loginUser()", e);
-            response = new  CreateUserResponse(Status.failure);
+            response = new  CreateUserResponse(HTTPResponse.FAILED);
             response.setErrorCode(ErrorCodes.technical_error);
             return response;
         }

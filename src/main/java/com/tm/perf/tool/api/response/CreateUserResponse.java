@@ -1,11 +1,11 @@
 package com.tm.perf.tool.api.response;
 
 import com.tm.perf.tool.api.common.BaseResponse;
-import com.tm.perf.tool.constants.Constants.Status;
+import com.tm.perf.tool.common.Constants.HTTPResponse;
 
 public class CreateUserResponse extends BaseResponse{
     
-    public CreateUserResponse(Status status) {
+    public CreateUserResponse(HTTPResponse status) {
         super(status);
         // TODO Auto-generated constructor stub
     }

@@ -1,15 +1,15 @@
 package com.tm.perf.tool.api.common;
 
-import com.tm.perf.tool.constants.Constants.ErrorCodes;
-import com.tm.perf.tool.constants.Constants.Status;
+import com.tm.perf.tool.common.Constants.ErrorCodes;
+import com.tm.perf.tool.common.Constants.HTTPResponse;
 
 public class BaseResponse {
     
     private String errorMsg;
     private ErrorCodes errorCode;
-    private Status status;
+    private HTTPResponse status;
     
-    public BaseResponse(Status status) {
+    public BaseResponse(HTTPResponse status) {
         super();
         this.status = status;
     }
@@ -26,10 +26,10 @@ public class BaseResponse {
     public void setErrorCode(ErrorCodes errorCode) {
         this.errorCode = errorCode;
     }
-    public Status getStatus() {
+    public HTTPResponse getStatus() {
         return status;
     }
-    public void setStatus(Status status) {
+    public void setStatus(HTTPResponse status) {
         this.status = status;
     }
     
