@@ -1,4 +1,4 @@
-package com.tm.perf.tool.response;
+package com.tm.perf.tool.api.response;
 
 import org.springframework.http.HttpStatus;
 

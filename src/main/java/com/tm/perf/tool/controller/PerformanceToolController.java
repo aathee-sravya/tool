@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tm.perf.tool.request.ReviewReport;
+import com.tm.perf.tool.api.request.ReviewReport;
 import com.tm.perf.tool.service.UserService;
 
 @RestController
