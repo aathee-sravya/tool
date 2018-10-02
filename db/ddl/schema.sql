@@ -196,7 +196,7 @@ CREATE TABLE t_perf_comments (
 	f_agent VARCHAR(100),
 	f_create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-)
+);
 
 
 /** TODO : need to add routes table */
