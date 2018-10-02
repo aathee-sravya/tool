@@ -19,12 +19,13 @@ CREATE TABLE t_mst_params (
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
-INSERT INTO t_mst_params(f_param_name,f_param_display_name) values ('company_level_params',Company Level Params');
-INSERT INTO t_mst_params(f_param_name,f_param_display_name) values ('team_level_params',Team Level Params');
-INSERT INTO t_mst_params(f_param_name,f_param_display_name) values ('user_level_params',User Level Params');
+INSERT INTO t_mst_params(f_param_name,f_param_display_name) values ('company_level_params','Company Level Params');
+INSERT INTO t_mst_params(f_param_name,f_param_display_name) values ('team_level_params','Team Level Params');
+INSERT INTO t_mst_params(f_param_name,f_param_display_name) values ('user_level_params','User Level Params');
 
 
 /** This table contains list of all company's **/
+DROP TABLE IF EXISTS t_company;
 CREATE TABLE t_company {
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_name VARCHAR(100) NOT NULL,
@@ -89,6 +90,7 @@ CREATE TABLE t_company_designations (
 	PRIMARY KEY(f_designation, f_company_id)
 );
 
+DROP TABLE IF EXISTS t_company_user_mapping;
 CREATE TABLE t_company_user_mapping (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_id BIGINT NOT NULL REFERENCES t_company(f_id),
@@ -139,6 +141,7 @@ CREATE TABLE t_sub_params_desg_config (
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS t_user_role_mapping;
 CREATE TABLE t_user_role_mapping (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_id BIGINT NOT NULL REFERENCES t_company(f_id),
@@ -150,6 +153,7 @@ CREATE TABLE t_user_role_mapping (
 	PRIMARY KEY(f_company_id,f_role_id,f_user_id)
 );
 
+DROP TABLE IF EXISTS t_perf_review;
 CREATE TABLE t_perf_review (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_company_id BIGINT NOT NULL,
@@ -166,6 +170,7 @@ CREATE TABLE t_perf_review (
 	f_update_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS t_perf_review_log;
 CREATE TABLE t_perf_review_log (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_master_id BIGINT REFERENCES t_perf_review(f_id),
@@ -182,6 +187,7 @@ CREATE TABLE t_perf_review_log (
 	f_create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+DROP TABLE IF EXISTS t_perf_comments;
 CREATE TABLE t_perf_comments (
 	f_id BIGINT NOT NULL AUTO_INCREMENT UNIQUE,
 	f_perf_id BIGINT REFERENCES t_perf_review(f_id),
@@ -265,5 +271,4 @@ CREATE TABLE t_user_profile_list (
 	f_status VARCHAR(50),
 	f_create_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) COMMENT= 'log table for t_user_profile';
-
 
